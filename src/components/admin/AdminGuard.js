@@ -21,6 +21,7 @@ export default function AdminGuard({ children }) {
 
                 // Server-side admin check — email is NOT exposed in client
                 const res = await fetch('/api/check-admin', {
+                    cache: 'no-store',
                     headers: { Authorization: `Bearer ${session.access_token}` },
                 });
                 const data = await res.json();

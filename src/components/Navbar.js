@@ -52,6 +52,7 @@ export default function Navbar() {
             if (session?.access_token) {
                 try {
                     const res = await fetch('/api/check-admin', {
+                        cache: 'no-store',
                         headers: { Authorization: `Bearer ${session.access_token}` },
                     });
                     const data = await res.json();

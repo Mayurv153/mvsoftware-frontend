@@ -46,6 +46,7 @@ function LoginContent() {
             // Server-side admin check — no email exposed in client
             try {
                 const res = await fetch('/api/check-admin', {
+                    cache: 'no-store',
                     headers: { Authorization: `Bearer ${data.session.access_token}` },
                 });
                 const adminData = await res.json();
