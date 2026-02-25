@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
+const rawApiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const normalizedApiBase = rawApiBase.replace(/\/+$/, '').replace(/\/api$/i, '');
+
 const nextConfig = {
     images: {
         formats: ['image/webp'],
@@ -11,7 +14,7 @@ const nextConfig = {
         return [
             {
                 source: '/api/:path*',
-                destination: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/:path*`,
+                destination: `${normalizedApiBase}/api/:path*`,
             },
         ];
     },

@@ -1,7 +1,13 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const rawApiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_BASE_URL = rawApiBase.replace(/\/+$/, '').replace(/\/api$/i, '');
+
+function buildApiUrl(endpoint) {
+    const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    return `${API_BASE_URL}${normalizedEndpoint}`;
+}
 
 async function fetchAPI(endpoint, options = {}) {
-    const url = `${API_URL}${endpoint}`;
+    const url = buildApiUrl(endpoint);
     const config = {
         ...options,
         headers: { 'Content-Type': 'application/json', ...options.headers },
