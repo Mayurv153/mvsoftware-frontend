@@ -413,6 +413,15 @@ function HomeContent() {
 
     const doubledLogos = [...clientLogos, ...clientLogos];
 
+    const handleLogoError = useCallback((e) => {
+        const el = e.target;
+        el.onerror = null;
+        const name = el.getAttribute('data-name') || '';
+        const initial = (name && name.trim()[0]) ? name.trim()[0].toUpperCase() : '?';
+        const svg = `<?xml version="1.0" encoding="UTF-8"?><svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><rect width='100%' height='100%' fill='%23333333'/><text x='50%' y='50%' dy='0.35em' font-family='Inter, Arial, sans-serif' font-size='52' fill='%23ffffff' text-anchor='middle'>${initial}</text></svg>`;
+        el.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }, []);
+
     return (
         <>
             {/* ═══════════════════════════════════════════
@@ -461,14 +470,16 @@ function HomeContent() {
                 <div className="ticker-strip flex items-center gap-8 whitespace-nowrap">
                     {doubledLogos.map((name, i) => (
                         <div key={`${name}-${i}`} className="flex items-center gap-2 text-surface-500 flex-shrink-0">
-                            <img
-                                src={`https://cdn.simpleicons.org/${name.toLowerCase().replace(/[.\s]/g, '')}/71717a`}
-                                alt={name}
-                                width={20}
-                                height={20}
-                                className="opacity-60"
-                                loading="lazy"
-                            />
+                                    <img
+                                        src={`https://cdn.simpleicons.org/${name.toLowerCase().replace(/[.\s]/g, '')}/71717a`}
+                                        data-name={name}
+                                        onError={handleLogoError}
+                                        alt={name}
+                                        width={20}
+                                        height={20}
+                                        className="opacity-60"
+                                        loading="lazy"
+                                    />
                             <span className="text-sm font-medium">{name}</span>
                         </div>
                     ))}
