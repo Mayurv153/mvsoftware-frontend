@@ -1,10 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
-
-const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || '')
-    .split(',')
-    .map((e) => e.trim().toLowerCase())
-    .filter(Boolean);
+import { isAdminEmail } from '@/lib/server/adminEmails';
 
 export async function GET(request) {
     try {
@@ -27,7 +23,7 @@ export async function GET(request) {
             return NextResponse.json({ isAdmin: false }, { status: 401 });
         }
 
-        const isAdmin = ADMIN_EMAILS.includes(user.email.toLowerCase());
+        const isAdmin = isAdminEmail(user.email);
 
         return NextResponse.json({ isAdmin });
     } catch {

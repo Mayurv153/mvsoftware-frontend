@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { isAdminEmail } from '@/lib/server/adminEmails';
 
 export async function GET(request) {
     const { searchParams, origin } = new URL(request.url);
@@ -46,8 +47,7 @@ export async function GET(request) {
 
         if (!error) {
             // Check if the user is admin to redirect appropriately
-            const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map((e) => e.trim().toLowerCase());
-            const redirectPath = adminEmails.includes(data?.user?.email?.toLowerCase()) ? '/admin/dashboard' : next;
+            const redirectPath = isAdminEmail(data?.user?.email) ? '/admin/dashboard' : next;
             return NextResponse.redirect(`${origin}${redirectPath}`);
         }
 
