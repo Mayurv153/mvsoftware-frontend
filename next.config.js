@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const rawApiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-const normalizedApiBase = rawApiBase.replace(/\/+$/, '').replace(/\/api$/i, '');
+const normalizedApiBase = rawApiBase
+    .replace(/\\r|\\n/g, '')
+    .trim()
+    .replace(/^['"]+|['"]+$/g, '')
+    .replace(/\/+$/, '')
+    .replace(/\/api$/i, '');
 
 const nextConfig = {
     images: {

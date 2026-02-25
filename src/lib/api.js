@@ -1,5 +1,10 @@
 const rawApiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-const API_BASE_URL = rawApiBase.replace(/\/+$/, '').replace(/\/api$/i, '');
+const API_BASE_URL = rawApiBase
+    .replace(/\\r|\\n/g, '')
+    .trim()
+    .replace(/^['"]+|['"]+$/g, '')
+    .replace(/\/+$/, '')
+    .replace(/\/api$/i, '');
 
 function buildApiUrl(endpoint) {
     const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
