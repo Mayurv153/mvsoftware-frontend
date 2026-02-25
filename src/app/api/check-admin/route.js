@@ -9,6 +9,34 @@ const noStoreHeaders = {
     'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
 };
 
+function normalizeApiBase(value) {
+    return String(value || '')
+        .replace(/\\r|\\n/g, '')
+        .trim()
+        .replace(/^['"]+|['"]+$/g, '')
+        .replace(/\/+$/, '')
+        .replace(/\/api$/i, '');
+}
+
+async function checkBackendAdmin(token) {
+    const apiBase = normalizeApiBase(process.env.NEXT_PUBLIC_API_URL);
+    if (!apiBase) return false;
+
+    try {
+        const response = await fetch(`${apiBase}/api/check-admin`, {
+            cache: 'no-store',
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response.ok) return false;
+
+        const data = await response.json();
+        return data?.isAdmin === true;
+    } catch {
+        return false;
+    }
+}
+
 export async function GET(request) {
     try {
         const authHeader = request.headers.get('authorization');
@@ -30,7 +58,7 @@ export async function GET(request) {
             return NextResponse.json({ isAdmin: false }, { status: 401, headers: noStoreHeaders });
         }
 
-        const isAdmin = isAdminEmail(user.email);
+        const isAdmin = isAdminEmail(user.email) || await checkBackendAdmin(token);
 
         return NextResponse.json({ isAdmin }, { headers: noStoreHeaders });
     } catch {
