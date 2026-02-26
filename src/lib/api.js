@@ -147,6 +147,13 @@ export async function updateAdminRequest(token, id, data) {
     });
 }
 
+export async function deleteAdminRequest(token, id) {
+    return fetchAPI(`/api/admin/requests/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+    });
+}
+
 // ─── Admin: Payments ────────────────────────
 export async function getAdminPayments(token, params = {}) {
     const query = new URLSearchParams(params).toString();

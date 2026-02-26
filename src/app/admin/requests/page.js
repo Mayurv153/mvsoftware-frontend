@@ -2,8 +2,8 @@
 
 import { useEffect, useState, Fragment } from 'react';
 import { supabase } from '@/lib/supabase';
-import { getAdminRequests, updateAdminRequest } from '@/lib/api';
-import { Search, MessageSquareText, ChevronDown, ChevronUp, Check, StickyNote, RefreshCw } from 'lucide-react';
+import { getAdminRequests, updateAdminRequest, deleteAdminRequest } from '@/lib/api';
+import { Search, MessageSquareText, ChevronDown, ChevronUp, Check, StickyNote, RefreshCw, Trash2 } from 'lucide-react';
 
 const statuses = ['all', 'new', 'contacted', 'converted', 'closed'];
 const statusColors = {
@@ -42,6 +42,22 @@ export default function AdminRequests() {
     const showToast = (msg) => {
         setToast(msg);
         setTimeout(() => setToast(''), 3000);
+    };
+
+    const handleDeleteRequest = async (id) => {
+        if (!confirm('Are you sure you want to delete this service request? This action cannot be undone.')) return;
+        
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) return;
+            await deleteAdminRequest(session.access_token, id);
+            setRequests(prev => prev.filter(r => r.id !== id));
+            showToast('Service request deleted successfully');
+            if (expandedId === id) setExpandedId(null);
+        } catch (err) {
+            console.error('Delete error:', err);
+            showToast('Failed to delete service request');
+        }
     };
 
     const handleStatusChange = async (id, newStatus) => {
@@ -205,6 +221,14 @@ export default function AdminRequests() {
                                             {isExpanded && (
                                                 <tr>
                                                     <td colSpan={7} className="bg-slate-50/70 px-5 py-4 border-b border-slate-200">
+                                                        <div className="flex justify-end mb-3">
+                                                            <button
+                                                                onClick={(e) => { e.stopPropagation(); handleDeleteRequest(req.id); }}
+                                                                className="px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors border border-red-200/50"
+                                                            >
+                                                                <Trash2 size={14} /> Delete Request
+                                                            </button>
+                                                        </div>
                                                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                                             {/* Message */}
                                                             <div>
