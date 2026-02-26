@@ -36,7 +36,7 @@ const features = [
 ];
 
 export default function EcommercePage() {
-    const whatsappUrl = `https://api.whatsapp.com/send?phone=919423699549&text=${encodeURIComponent('Hi mv webservice i need website for____')}`;
+    const whatsappUrl = `https://wa.me/919423699549?text=Hi%20mv%20webservice%20i%20need%20website%20for`;
 
     return (
         <>

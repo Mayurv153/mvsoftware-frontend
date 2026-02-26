@@ -20,7 +20,7 @@ const footerLinks = {
 };
 
 export default function Footer() {
-    const whatsappUrl = `https://api.whatsapp.com/send?phone=919423699549&text=${encodeURIComponent('Hi mv webservice i need website for____')}`;
+    const whatsappUrl = `https://wa.me/919423699549?text=Hi%20mv%20webservice%20i%20need%20website%20for`;
 
     return (
         <footer className="bg-surface-950 rounded-t-[3.5rem] border-t border-surface-800/50 mt-[-1px]">

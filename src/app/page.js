@@ -349,7 +349,7 @@ function FaqItem({ faq, isOpen, onToggle }) {
    MAIN PAGE
    ───────────────────────────────────────────── */
 function HomeContent() {
-    const whatsappUrl = `https://api.whatsapp.com/send?phone=919423699549&text=${encodeURIComponent('Hi mv webservice i need website for____')}`;
+    const whatsappUrl = `https://wa.me/919423699549?text=Hi%20mv%20webservice%20i%20need%20website%20for`;
     const { triggerCTA, isModalOpen, closeModal, user } = useAuthCTA();
     const [openFaq, setOpenFaq] = useState(null);
     const [testimonials, setTestimonials] = useState(fallbackTestimonials);
