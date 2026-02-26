@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
-import { getAdminMetrics, getAdminRequests, getAdminProjects } from '@/lib/api';
+import { getAdminMetrics, getAdminRequests, getAdminProjects, deleteAdminRequest } from '@/lib/api';
 import {
     IndianRupee,
     Users,
@@ -13,6 +13,7 @@ import {
     MessageSquareText,
     TrendingUp,
     Clock,
+    Trash2,
 } from 'lucide-react';
 
 const statusBadge = (status) => {
@@ -55,6 +56,19 @@ export default function AdminDashboard() {
         };
         load();
     }, []);
+
+    const handleDeleteRequest = async (id) => {
+        if (!confirm('Are you sure you want to delete this service request?')) return;
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) return;
+            await deleteAdminRequest(session.access_token, id);
+            setRecentRequests(prev => prev.filter(r => r.id !== id));
+        } catch (err) {
+            console.error('Delete error:', err);
+            alert('Failed to delete request');
+        }
+    };
 
     if (loading) {
         return (
@@ -145,6 +159,7 @@ export default function AdminDashboard() {
                                         <th className="px-5 py-3 font-medium">Plan</th>
                                         <th className="px-5 py-3 font-medium">Status</th>
                                         <th className="px-5 py-3 font-medium">Date</th>
+                                        <th className="px-5 py-3 font-medium text-right">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100">
@@ -166,6 +181,15 @@ export default function AdminDashboard() {
                                             </td>
                                             <td className="px-5 py-3 text-slate-500 text-xs whitespace-nowrap">
                                                 {new Date(req.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                                            </td>
+                                            <td className="px-5 py-3 text-right">
+                                                <button
+                                                    onClick={(e) => { e.preventDefault(); handleDeleteRequest(req.id); }}
+                                                    className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                                    title="Delete Request"
+                                                >
+                                                    <Trash2 size={16} />
+                                                </button>
                                             </td>
                                         </tr>
                                     ))}
