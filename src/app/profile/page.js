@@ -19,9 +19,11 @@ import { Separator } from '@/components/ui/separator';
 export default function ProfilePage() {
     const router = useRouter();
     const [user, setUser] = useState(null);
+    const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [uploading, setUploading] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
     const [form, setForm] = useState({ full_name: '', phone: '' });
 
@@ -43,10 +45,26 @@ export default function ProfilePage() {
                 return;
             }
             setUser(session.user);
-            setForm({
-                full_name: session.user.user_metadata?.full_name || '',
-                phone: session.user.user_metadata?.phone || '',
-            });
+            
+            // Load extended profile data
+            const { data: profileData } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', session.user.id)
+                .maybeSingle();
+            
+            if (profileData) {
+                setProfile(profileData);
+                setForm({
+                    full_name: profileData.full_name || session.user.user_metadata?.full_name || '',
+                    phone: profileData.phone || session.user.user_metadata?.phone || '',
+                });
+            } else {
+                setForm({
+                    full_name: session.user.user_metadata?.full_name || '',
+                    phone: session.user.user_metadata?.phone || '',
+                });
+            }
         } catch (err) {
             console.error('Error loading user:', err);
             router.push('/login');
@@ -55,22 +73,77 @@ export default function ProfilePage() {
         }
     };
 
+    const handleAvatarUpload = async (event) => {
+        try {
+            setUploading(true);
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${user.id}/${Math.random()}.${fileExt}`;
+            const filePath = `avatars/${fileName}`;
+
+            // 1. Upload to Supabase Storage
+            const { error: uploadError } = await supabase.storage
+                .from('avatars')
+                .upload(filePath, file, { upsert: true });
+
+            if (uploadError) throw uploadError;
+
+            // 2. Get Public URL
+            const { data: { publicUrl } } = supabase.storage
+                .from('avatars')
+                .getPublicUrl(filePath);
+
+            // 3. Update profiles table
+            const { error: updateError } = await supabase
+                .from('profiles')
+                .update({ avatar_url: publicUrl })
+                .eq('id', user.id);
+
+            if (updateError) throw updateError;
+
+            // Update local state
+            setProfile(prev => ({ ...prev, avatar_url: publicUrl }));
+            setMessage({ type: 'success', text: 'Profile picture updated!' });
+        } catch (err) {
+            console.error('Avatar upload failed:', err.message);
+            setMessage({ type: 'error', text: 'Failed to upload image. Make sure "avatars" bucket is public in Supabase.' });
+        } finally {
+            setUploading(false);
+        }
+    };
+
     const handleSaveProfile = async () => {
         setSaving(true);
         setMessage({ type: '', text: '' });
 
         try {
-            const { error } = await supabase.auth.updateUser({
+            // Update Auth Metadata
+            const { error: authError } = await supabase.auth.updateUser({
                 data: {
                     full_name: form.full_name,
                     phone: form.phone,
                 },
             });
 
-            if (error) throw error;
+            if (authError) throw authError;
+
+            // Update Profiles Table
+            const { error: profileError } = await supabase
+                .from('profiles')
+                .update({
+                    full_name: form.full_name,
+                    phone: form.phone,
+                })
+                .eq('id', user.id);
+
+            if (profileError) throw profileError;
 
             const { data: { user: updatedUser } } = await supabase.auth.getUser();
             setUser(updatedUser);
+            setProfile(prev => ({ ...prev, full_name: form.full_name, phone: form.phone }));
+            
             setEditing(false);
             setMessage({ type: 'success', text: 'Profile updated successfully!' });
             setTimeout(() => setMessage({ type: '', text: '' }), 3000);
@@ -179,17 +252,49 @@ export default function ProfilePage() {
                             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                                 {/* Avatar */}
                                 <div className="relative group">
-                                    <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-brand-400 to-accent-500 flex items-center justify-center text-white text-3xl font-bold shadow-lg shadow-brand-500/20">
-                                        {getInitial()}
+                                    <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-brand-400 to-accent-500 flex items-center justify-center text-white text-3xl font-bold shadow-lg shadow-brand-500/20 overflow-hidden">
+                                        {profile?.avatar_url ? (
+                                            <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+                                        ) : (
+                                            getInitial()
+                                        )}
+                                        
+                                        {/* Hover Overlay */}
+                                        <label className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                            {uploading ? (
+                                                <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                            ) : (
+                                                <Edit3 size={24} className="text-white" />
+                                            )}
+                                            <input 
+                                                type="file" 
+                                                accept="image/*" 
+                                                className="hidden" 
+                                                onChange={handleAvatarUpload}
+                                                disabled={uploading}
+                                            />
+                                        </label>
                                     </div>
-                                    <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-green-500 border-2 border-surface-900" />
+                                    <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-green-500 border-2 border-surface-900" title="Online" />
                                 </div>
 
                                 {/* Info */}
                                 <div className="flex-1 text-center sm:text-left">
-                                    <h1 className="text-2xl font-bold text-white mb-1">
-                                        {user.user_metadata?.full_name || 'User'}
-                                    </h1>
+                                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
+                                        <h1 className="text-2xl font-bold text-white">
+                                            {profile?.full_name || user.user_metadata?.full_name || 'User'}
+                                        </h1>
+                                        
+                                        {/* Plan Badge */}
+                                        <Badge className={`w-fit mx-auto sm:mx-0 font-bold uppercase tracking-wider text-[10px] ${
+                                            profile?.plan_slug === 'pro' ? 'bg-purple-500 text-white' :
+                                            profile?.plan_slug === 'growth' ? 'bg-blue-500 text-white' :
+                                            profile?.plan_slug === 'starter' ? 'bg-green-500 text-white' :
+                                            'bg-surface-800 text-surface-400'
+                                        }`}>
+                                            {profile?.plan_slug || 'Free'} Plan
+                                        </Badge>
+                                    </div>
                                     <p className="text-surface-400 text-sm mb-3">{user.email}</p>
                                     <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
                                         <Badge className="bg-brand-500/10 text-brand-400 border-brand-500/20 hover:bg-brand-500/20">
