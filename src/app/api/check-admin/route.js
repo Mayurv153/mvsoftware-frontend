@@ -11,7 +11,7 @@ const noStoreHeaders = {
 
 function normalizeApiBase(value) {
     return String(value || '')
-        .replace(/\\r|\\n/g, '')
+        .replace(/\r|\n/g, '')
         .trim()
         .replace(/^['"]+|['"]+$/g, '')
         .replace(/\/+$/, '')
