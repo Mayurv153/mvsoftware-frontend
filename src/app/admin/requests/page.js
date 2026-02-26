@@ -181,6 +181,7 @@ export default function AdminRequests() {
                                     <th className="px-5 py-3 font-medium">Plan</th>
                                     <th className="px-5 py-3 font-medium">Status</th>
                                     <th className="px-5 py-3 font-medium">Date</th>
+                                    <th className="px-5 py-3 font-medium text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100">
@@ -217,18 +218,19 @@ export default function AdminRequests() {
                                                 <td className="px-5 py-3.5 text-slate-500 whitespace-nowrap text-xs">
                                                     {new Date(req.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                                                 </td>
+                                                <td className="px-5 py-3.5 text-right" onClick={(e) => e.stopPropagation()}>
+                                                    <button
+                                                        onClick={() => handleDeleteRequest(req.id)}
+                                                        className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                                        title="Delete Request"
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                </td>
                                             </tr>
                                             {isExpanded && (
                                                 <tr>
-                                                    <td colSpan={7} className="bg-slate-50/70 px-5 py-4 border-b border-slate-200">
-                                                        <div className="flex justify-end mb-3">
-                                                            <button
-                                                                onClick={(e) => { e.stopPropagation(); handleDeleteRequest(req.id); }}
-                                                                className="px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors border border-red-200/50"
-                                                            >
-                                                                <Trash2 size={14} /> Delete Request
-                                                            </button>
-                                                        </div>
+                                                    <td colSpan={8} className="bg-slate-50/70 px-5 py-4 border-b border-slate-200">
                                                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                                             {/* Message */}
                                                             <div>
