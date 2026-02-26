@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 function PaymentSuccessContent() {
     const searchParams = useSearchParams();
     const message = searchParams.get('message') || 'Payment successful';
-    const whatsappUrl = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP}?text=Hi!%20I%20just%20completed%20my%20payment.%20Looking%20forward%20to%20getting%20started!`;
+    const whatsappUrl = `https://wa.me/919423699549?text=Hi%20mv%20webservice%20i%20need%20website%20for____`;
 
     return (
         <section className="min-h-[80vh] flex items-center justify-center py-20">

@@ -20,7 +20,7 @@ const footerLinks = {
 };
 
 export default function Footer() {
-    const whatsappUrl = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP}?text=Hi%20MV%20Webservice!%20I%20need%20a%20website.`;
+    const whatsappUrl = `https://wa.me/919423699549?text=Hi%20mv%20webservice%20i%20need%20website%20for____`;
 
     return (
         <footer className="bg-surface-950 rounded-t-[3.5rem] border-t border-surface-800/50 mt-[-1px]">

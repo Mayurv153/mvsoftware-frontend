@@ -42,7 +42,7 @@ const contactInfo = [
 ];
 
 export default function ContactPage() {
-    const whatsappUrl = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP}?text=Hi%20MV%20Webservice!%20I%20want%20a%20quote.`;
+    const whatsappUrl = `https://wa.me/919423699549?text=Hi%20mv%20webservice%20i%20need%20website%20for____`;
 
     return (
         <>
