@@ -11,7 +11,7 @@ const noStoreHeaders = {
 
 function normalizeApiBase(value) {
     return String(value || '')
-        .replace(/\\r|\\n/g, '')
+        .replace(/\r|\n/g, '')
         .trim()
         .replace(/^['"]+|['"]+$/g, '')
         .replace(/\/+$/, '')
@@ -19,7 +19,7 @@ function normalizeApiBase(value) {
 }
 
 async function checkBackendAdmin(token) {
-    const apiBase = normalizeApiBase(process.env.NEXT_PUBLIC_API_URL);
+    const apiBase = normalizeApiBase(process.env.NEXT_PUBLIC_API_URL || 'https://mvsoftware-backend.onrender.com');
     if (!apiBase) return false;
 
     try {
