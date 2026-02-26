@@ -36,7 +36,7 @@ const panelVariants = {
 };
 
 export default function ServiceRequestModal({ isOpen, onClose, user, planSlug = '', service = '', onPayment = null }) {
-    const whatsappUrl = `https://wa.me/919423699549?text=Hi%20mv%20webservice%20i%20need%20website%20for`;
+    const whatsappUrl = `https://wa.me/919423699549?text=Hi+mv+webservice+i+need+website+for`;
 
     const [form, setForm] = useState({
         name: '',

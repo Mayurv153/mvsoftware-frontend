@@ -34,7 +34,7 @@ const categoryIcon = {
 };
 
 export default function ProjectsPage() {
-    const whatsappUrl = `https://wa.me/919423699549?text=Hi%20mv%20webservice%20i%20need%20website%20for`;
+    const whatsappUrl = `https://wa.me/919423699549?text=Hi+mv+webservice+i+need+website+for`;
     const [activeFilter, setActiveFilter] = useState('All');
     const [projects, setProjects] = useState(fallbackProjects);
 

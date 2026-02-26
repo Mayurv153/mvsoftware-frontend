@@ -121,7 +121,7 @@ export default function LivePricingEstimator({ plans = [] }) {
                             </p>
                             <p className="text-surface-400 mb-6">Estimated delivery: {estimate.delivery} - {estimate.delivery + 4} days</p>
                             <a
-                                href={`https://wa.me/919423699549?text=Hi%20mv%20webservice%20i%20need%20website%20for%20(Quote%20between%20${encodeURIComponent(formatInr(estimate.min))}%20and%20${encodeURIComponent(formatInr(estimate.max))})`}
+                                href={`https://wa.me/919423699549?text=Hi+mv+webservice+i+need+website+for+(Quote+between+${encodeURIComponent(formatInr(estimate.min))}+and+${encodeURIComponent(formatInr(estimate.max))})`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="btn-primary btn-glow w-full justify-center"

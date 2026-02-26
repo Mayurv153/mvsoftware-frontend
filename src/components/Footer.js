@@ -20,7 +20,7 @@ const footerLinks = {
 };
 
 export default function Footer() {
-    const whatsappUrl = `https://wa.me/919423699549?text=Hi%20mv%20webservice%20i%20need%20website%20for`;
+    const whatsappUrl = `https://wa.me/919423699549?text=Hi+mv+webservice+i+need+website+for`;
 
     return (
         <footer className="bg-surface-950 rounded-t-[3.5rem] border-t border-surface-800/50 mt-[-1px]">
