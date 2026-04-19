@@ -5,7 +5,7 @@ export const metadata = {
     openGraph: {
         title: 'Pricing — MV Webservice',
         description: 'Affordable pricing for premium web development — Starter, Professional & Custom plans.',
-        url: 'https://mvwebservice.com/pricing',
+        url: 'https://mvwebservice.tech/pricing',
     },
 };
 

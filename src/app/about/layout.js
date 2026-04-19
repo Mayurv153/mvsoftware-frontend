@@ -5,7 +5,7 @@ export const metadata = {
     openGraph: {
         title: 'About MV Webservice',
         description: 'Premium web development agency building animated websites & AI automations.',
-        url: 'https://mvwebservice.com/about',
+        url: 'https://mvwebservice.tech/about',
     },
 };
 

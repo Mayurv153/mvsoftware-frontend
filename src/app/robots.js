@@ -7,6 +7,6 @@ export default function robots() {
                 disallow: ['/admin/', '/profile/', '/api/'],
             },
         ],
-        sitemap: 'https://mvwebservice.com/sitemap.xml',
+        sitemap: 'https://mvwebservice.tech/sitemap.xml',
     };
 }

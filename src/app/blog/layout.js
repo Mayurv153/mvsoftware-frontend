@@ -7,7 +7,7 @@ export const metadata = {
     openGraph: {
         title: 'Blog | MV Webservice',
         description: 'Insights on web development, SEO, performance, and digital growth.',
-        url: 'https://mvwebservice.com/blog',
+        url: 'https://mvwebservice.tech/blog',
         type: 'website',
     },
 };

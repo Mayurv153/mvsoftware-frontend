@@ -1,7 +1,7 @@
 import { getAllBlogPosts } from '@/content/blogPosts';
 import { getAllCaseStudies } from '@/content/caseStudies';
 
-const BASE_URL = 'https://mvwebservice.com';
+const BASE_URL = 'https://mvwebservice.tech';
 
 export default function sitemap() {
     const now = new Date().toISOString();

@@ -7,7 +7,7 @@ export const metadata = {
     openGraph: {
         title: 'Case Studies | MV Webservice',
         description: 'See real project outcomes, process, and measurable business results.',
-        url: 'https://mvwebservice.com/case-studies',
+        url: 'https://mvwebservice.tech/case-studies',
         type: 'website',
     },
 };

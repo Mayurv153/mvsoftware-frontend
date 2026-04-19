@@ -8,7 +8,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 export const metadata = {
-    metadataBase: new URL('https://mvwebservice.com'),
+    metadataBase: new URL('https://mvwebservice.tech'),
     title: {
         default: 'MV Webservice — Stunning Websites & AI Automations',
         template: '%s | MV Webservice',
@@ -19,7 +19,7 @@ export const metadata = {
     openGraph: {
         title: 'MV Webservice — Stunning Websites & AI Automations',
         description: 'We build stunning animated websites & AI-powered automations for small businesses and startups.',
-        url: 'https://mvwebservice.com',
+        url: 'https://mvwebservice.tech',
         siteName: 'MV Webservice',
         type: 'website',
         locale: 'en_IN',

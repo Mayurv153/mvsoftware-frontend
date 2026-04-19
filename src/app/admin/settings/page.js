@@ -12,7 +12,7 @@ export default function AdminSettings() {
         business_name: 'MV Webservice',
         contact_email: '',
         whatsapp_number: '',
-        site_url: 'https://mvwebservice.com',
+        site_url: 'https://mvwebservice.tech',
         tagline: 'Stunning Websites & AI Automations',
     });
     const [saving, setSaving] = useState(false);
